@@ -63,44 +63,47 @@ class KeepSideBBox(Config):
         Rotate image without catting off sides.
     """
     name: Literal["KeepSide"] = "KeepSide"
-    value: Union[KeepSideTrue, KeepSideFalse]
+    value: Union[KeepSideTrue, KeepSideFalse]#birden fazla değer alabilmesini istiyorsak union kullanıyoruz.
     type: Literal["object"] = "object"
-    field: Literal["dropdownlist"] = "dropdownlist"
+    field: Literal["dropdownlist"] = "dropdownlist"#dependedDropdownlist olarak yazarsak seçtiğimizde seçtiğimiz şeyler için ayrıca parametre seçebiliriz.
 
     class Config:
         title = "Keep Sides"
 
 
 class Degree(Config):
+    #burada açıklama satırı olarak yazılan metin arayüzde gözükecektir.
     """
         Positive angles specify counterclockwise rotation while negative angles indicate clockwise rotation.
     """
-    name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359.0, le=359.0,default=0)
+    name: Literal["Degree"] = "Degree"#executorda parametreleri çekmek için kullandığımız namedir.
+    value: int = Field(ge=-359.0, le=359.0,default=0)#burada ise sınırları belirtebiliriz.
     type: Literal["number"] = "number"
     field: Literal["textInput"] = "textInput"
     placeHolder: Literal["[-359, 359]"] = "[-359, 359]"
-
+    
+    #Parametrenin arayüzdeki başlığını ayarlamamızı sağlar.
     class Config:
         title = "Angle"
 
-
-class PackageInputs(Inputs):
+#burda da seçilen execuotra göre paket kaç tane input alacaksa alt alta yazılır.
+class DirectionEstimationExecutorInputs(Inputs):
     inputImage: InputImage
 
 
-class PackageConfigs(Configs):
+class DirectionEstimationExecutorConfigs(Configs):
     degree: Degree
     drawBBox: KeepSideBBox
 
-
-class PackageOutputs(Outputs):
+#paketimizin kaç tane outputu olacağını burada belirtiriz. birden fazla varsa alt alta yazarız.
+#seçilen executorlara göre paketin outputları değişir.
+class DirectionEstimationExecutorOutputs(Outputs):
     outputImage: OutputImage
 
-
-class PackageRequest(Request):
-    inputs: Optional[PackageInputs]
-    configs: PackageConfigs
+#request olarak yani paketimize bir istek geldiğinde bu istekleri input ya da config olarak alırız.
+class DirectionEstimationExecutorRequest(Request):
+    inputs: Optional[DirectionEstimationExecutorInputs]
+    configs: PDirectionEstimationExecutorConfigs
 
     class Config:
         json_schema_extra = {
@@ -108,13 +111,13 @@ class PackageRequest(Request):
         }
 
 
-class PackageResponse(Response):
-    outputs: PackageOutputs
+class DirectionEstimationExecutorResponse(Response):
+    outputs: DirectionEstimationExecutorOutputs
 
-
-class PackageExecutor(Config):
+#oluşturacağımız executorun requestini ve responsunu burada belirtiriz.
+class DirectionEstimationExecutorExecutor(Config):
     name: Literal["Package"] = "Package"
-    value: Union[PackageRequest, PackageResponse]
+    value: Union[DirectionEstimationExecutorRequest, DirectionEstimationExecutorResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
@@ -126,13 +129,13 @@ class PackageExecutor(Config):
             }
         }
 
-
+#paketin içerisinde kaç tane executor olacağının bilgisi burada girilir
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[PackageExecutor]
+    value: Union[DirectionEstimationExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
+    # eğer birden fazla executor varsa ve bunlardan biri seçilecekse Config olarak json_schema_extra içerisinde target value olarak bilrtilir.
     class Config:
         title = "Task"
         json_schema_extra = {
@@ -143,7 +146,7 @@ class ConfigExecutor(Config):
 class PackageConfigs(Configs):
     executor: ConfigExecutor
 
-
+#paketin tipi ne olacak component mi kapsül mü widgets mı burada belirtilir.
 class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["component"] = "component"
