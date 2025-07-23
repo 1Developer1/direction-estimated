@@ -107,7 +107,7 @@ class DirectionEstimationExecutorOutputs(Outputs):
 # request olarak yani paketimize bir istek geldiğinde bu istekleri input ya da config olarak alırız.
 class DirectionEstimationExecutorRequest(Request):
     inputs: Optional[DirectionEstimationExecutorInputs]
-    configs: PDirectionEstimationExecutorConfigs
+    configs: DirectionEstimationExecutorConfigs
 
     class Config:
         json_schema_extra = {
