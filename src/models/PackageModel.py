@@ -120,7 +120,7 @@ class DirectionEstimationExecutorResponse(Response):
 
 
 # oluşturacağımız executorun requestini ve responsunu burada belirtiriz.
-class DirectionEstimationExecutorExecutor(Config):
+class DirectionEstimationExecutor(Config):
     name: Literal["Package"] = "Package"
     value: Union[DirectionEstimationExecutorRequest, DirectionEstimationExecutorResponse]
     type: Literal["object"] = "object"
