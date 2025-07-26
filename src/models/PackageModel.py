@@ -121,13 +121,13 @@ class DirectionEstimationExecutorResponse(Response):
 
 # oluşturacağımız executorun requestini ve responsunu burada belirtiriz.
 class DirectionEstimationExecutor(Config):
-    name: Literal["Package"] = "Package"
+    name: Literal["DirectionEstimation"] = "DirectionEstimation"
     value: Union[DirectionEstimationExecutorRequest, DirectionEstimationExecutorResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
+        title = "DirectionEstimation"
         json_schema_extra = {
             "target": {
                 "value": 0
